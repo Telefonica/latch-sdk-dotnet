@@ -31,7 +31,7 @@ namespace LatchSDK
     public class Latch
     {
         private const string API_VERSION = "0.9";
-        public static string apiHost = "https://latch.elevenpaths.com";
+        private static string apiHost = "https://latch.elevenpaths.com";
         public static string API_HOST { get { return apiHost; } }
 
         public const string API_CHECK_STATUS_URL = "/api/" + API_VERSION + "/status";
@@ -250,7 +250,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Lock(string accountId)
         {
-            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId));
+            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Lock(string accountId, string operationId)
         {
-            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId));
+            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Unlock(string accountId)
         {
-            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId));
+            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Unlock(string accountId, string operationId)
         {
-            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId));
+            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -330,6 +330,25 @@ namespace LatchSDK
         }
 
         /// <summary>
+        /// Gets all operations of the application
+        /// </summary>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all operations</returns>
+        public LatchResponse GetOperations()
+        {
+            return HttpPerformRequest(API_OPERATION_URL);
+        }
+
+        /// <summary>
+        /// Gets all suboperations under the specified parent operation
+        /// </summary>
+        /// <param name="parentOperationId">Parent operation ID</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all suboperations</returns>
+        public LatchResponse GetOperations(string parentOperationId)
+        {
+            return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(parentOperationId));
+        }
+        
+        /// <summary>
         /// Creates a new operation with the specified parameters
         /// </summary>
         /// <param name="parentId">Parent operation ID</param>
@@ -337,7 +356,6 @@ namespace LatchSDK
         /// <param name="twoFactor">Two factor (OTP) mode (optional)</param>
         /// <param name="lockOnRequest">Lock on request (LOR) mode (optional)</param>
         /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the new operation ID</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse CreateOperation(string parentId, string name, FeatureMode twoFactor = FeatureMode.DISABLED, FeatureMode lockOnRequest = FeatureMode.DISABLED)
         {
             var data = new Dictionary<string, string>();
@@ -353,7 +371,6 @@ namespace LatchSDK
         /// </summary>
         /// <param name="operationId">Operation ID to remove</param>
         /// <returns>If everything goes well, an empty response</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse RemoveOperation(string operationId)
         {
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(operationId), HttpMethod.DELETE);
@@ -367,7 +384,6 @@ namespace LatchSDK
         /// <param name="twoFactor">New two factor (OTP) mode (optional)</param>
         /// <param name="lockOnRequest">New lock on request (LOR) mode (optional)</param>
         /// <returns>If everything goes well, an empty response</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse UpdateOperation(string operationId, string name, FeatureMode? twoFactor = null, FeatureMode? lockOnRequest = null)
         {
             var data = new Dictionary<string, string>();
