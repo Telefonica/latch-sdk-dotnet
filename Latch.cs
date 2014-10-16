@@ -31,7 +31,7 @@ namespace LatchSDK
     public class Latch
     {
         private const string API_VERSION = "0.9";
-        public static string apiHost = "https://latch.elevenpaths.com";
+        private static string apiHost = "https://latch.elevenpaths.com";
         public static string API_HOST { get { return apiHost; } }
 
         public const string API_CHECK_STATUS_URL = "/api/" + API_VERSION + "/status";
@@ -250,7 +250,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Lock(string accountId)
         {
-            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId));
+            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Lock(string accountId, string operationId)
         {
-            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId));
+            return HttpPerformRequest(API_LOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Unlock(string accountId)
         {
-            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId));
+            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace LatchSDK
         /// <remarks>Only for premium accounts</remarks>
         public LatchResponse Unlock(string accountId, string operationId)
         {
-            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId));
+            return HttpPerformRequest(API_UNLOCK_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId), HttpMethod.POST);
         }
 
         /// <summary>
@@ -329,6 +329,27 @@ namespace LatchSDK
                 toMillisFromEpoch.GetValueOrDefault(GetMillisecondsFromEpoch(DateTime.Now)).ToString());
         }
 
+        /// <summary>
+        /// Gets all operations of the application
+        /// </summary>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all operations</returns>
+        /// <remarks>Only for premium accounts</remarks>
+        public LatchResponse GetOperations()
+        {
+            return HttpPerformRequest(API_OPERATION_URL);
+        }
+
+        /// <summary>
+        /// Gets all suboperations under the specified parent operation
+        /// </summary>
+        /// <param name="parentOperationId">Parent operation ID</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all suboperations</returns>
+        /// <remarks>Only for premium accounts</remarks>
+        public LatchResponse GetOperations(string parentOperationId)
+        {
+            return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(parentOperationId));
+        }
+        
         /// <summary>
         /// Creates a new operation with the specified parameters
         /// </summary>
