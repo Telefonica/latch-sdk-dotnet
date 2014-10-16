@@ -333,7 +333,6 @@ namespace LatchSDK
         /// Gets all operations of the application
         /// </summary>
         /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all operations</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse GetOperations()
         {
             return HttpPerformRequest(API_OPERATION_URL);
@@ -344,7 +343,6 @@ namespace LatchSDK
         /// </summary>
         /// <param name="parentOperationId">Parent operation ID</param>
         /// <returns>If everything goes well, a <code>LatchResponse</code> object containing all suboperations</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse GetOperations(string parentOperationId)
         {
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(parentOperationId));
@@ -358,7 +356,6 @@ namespace LatchSDK
         /// <param name="twoFactor">Two factor (OTP) mode (optional)</param>
         /// <param name="lockOnRequest">Lock on request (LOR) mode (optional)</param>
         /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the new operation ID</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse CreateOperation(string parentId, string name, FeatureMode twoFactor = FeatureMode.DISABLED, FeatureMode lockOnRequest = FeatureMode.DISABLED)
         {
             var data = new Dictionary<string, string>();
@@ -374,7 +371,6 @@ namespace LatchSDK
         /// </summary>
         /// <param name="operationId">Operation ID to remove</param>
         /// <returns>If everything goes well, an empty response</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse RemoveOperation(string operationId)
         {
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(operationId), HttpMethod.DELETE);
@@ -388,7 +384,6 @@ namespace LatchSDK
         /// <param name="twoFactor">New two factor (OTP) mode (optional)</param>
         /// <param name="lockOnRequest">New lock on request (LOR) mode (optional)</param>
         /// <returns>If everything goes well, an empty response</returns>
-        /// <remarks>Only for premium accounts</remarks>
         public LatchResponse UpdateOperation(string operationId, string name, FeatureMode? twoFactor = null, FeatureMode? lockOnRequest = null)
         {
             var data = new Dictionary<string, string>();
