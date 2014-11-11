@@ -27,8 +27,8 @@ namespace LatchSDK
 {
     public class LatchResponse
     {
-        public Dictionary<string, object> Data { get; set; }
-        public Error Error { get; set; }
+        public Dictionary<string, object> Data { get; private set; }
+        public Error Error { get; private set; }
 
         private static JavaScriptSerializer js = new JavaScriptSerializer();
 
@@ -49,10 +49,7 @@ namespace LatchSDK
                     String message = err.ContainsKey("message") ? err["message"].ToString() : string.Empty;
                     this.Error = new Error(code, message);
                 }
-
             }
-
-
         }
     }
 }
