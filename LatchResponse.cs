@@ -1,6 +1,6 @@
 ﻿/*
     Returns the Latch responses according to the configuration set.
-    Copyright (C) 2013 Eleven Paths
+    Copyright (C) 2023 Telefonica Digital
  
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
