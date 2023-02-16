@@ -1,6 +1,6 @@
 ﻿/*
     Latch C# SDK - Set of  reusable classes to  allow developers integrate Latch on their applications.
-    Copyright (C) 2013 Eleven Paths.
+    Copyright (C) 2023 Telefonica Digital.
  
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ namespace LatchSDK
     public class Latch
     {
         private const string API_VERSION = "0.9";
-        private static string apiHost = "https://latch.elevenpaths.com";
+        private static string apiHost = "https://latch.telefonica.com";
         public static string API_HOST { get { return apiHost; } }
 
         public const string API_CHECK_STATUS_URL = "/api/" + API_VERSION + "/status";
@@ -62,7 +62,7 @@ namespace LatchSDK
         public enum FeatureMode { MANDATORY, OPT_IN, DISABLED }
 
         /// <summary>
-        /// Creates an instance of the class with the <code>Application ID</code> and <code>Secret</code> obtained from Eleven Paths 
+        /// Creates an instance of the class with the <code>Application ID</code> and <code>Secret</code> obtained from Telefonica Digital 
         /// </summary>
         public Latch(string appId, string secretKey)
         {
@@ -73,7 +73,7 @@ namespace LatchSDK
         /// <summary>
         /// Sets the host of the Latch API backend
         /// </summary>
-        /// <param name="host">The host of the Latch API backend in standard URI format (e.g: "https://latch.elevenpaths.com")</param>
+        /// <param name="host">The host of the Latch API backend in standard URI format (e.g: "https://latch.telefonica.com")</param>
         public static void SetHost(string host)
         {
             if (string.IsNullOrEmpty(host))
