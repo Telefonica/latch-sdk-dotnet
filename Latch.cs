@@ -191,7 +191,7 @@ namespace LatchSDK
             return new LatchResponse(HttpPerformRequest(apiHost + url, method, authHeaders, data));
         }
 
-#if NETSTANDARD
+#if NETSTANDARD || NET45_OR_GREATER
         /// <summary>
         /// Performs an async HTTP request to an URL using the specified method, headers and data, returning the response as a string
         /// </summary>

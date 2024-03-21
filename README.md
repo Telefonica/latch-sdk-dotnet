@@ -31,7 +31,7 @@
 ```
 
 
-##RESOURCES
+## RESOURCES
 - You can access Latch's use and installation manuals, together with a list of all available plugins here: [https://latch.telefonica.com/www/developers/resources](https://latch.telefonica.com/www/developers/resources)
 
 - Further information on de Latch's API can be found here: [https://latch.telefonica.com/www/developers/doc_api](https://latch.telefonica.com/www/developers/doc_api)
