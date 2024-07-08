@@ -25,6 +25,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Net;
 using System.Web;
+using System.Threading.Tasks;
 
 namespace LatchSDK
 {
@@ -68,6 +69,9 @@ namespace LatchSDK
         {
             this.appId = appId;
             this.secretKey = secretKey;
+#if NETFRAMEWORK
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)768 | (SecurityProtocolType)3072;
+#endif
         }
 
         /// <summary>
@@ -139,7 +143,6 @@ namespace LatchSDK
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = method.ToString();
-
             foreach (string key in headers.Keys)
             {
                 if (key.Equals("Authorization", StringComparison.InvariantCultureIgnoreCase))
@@ -188,7 +191,111 @@ namespace LatchSDK
             return new LatchResponse(HttpPerformRequest(apiHost + url, method, authHeaders, data));
         }
 
+#if NETSTANDARD || NET45_OR_GREATER
+        /// <summary>
+        /// Performs an async HTTP request to an URL using the specified method, headers and data, returning the response as a string
+        /// </summary>
+        protected static async Task<string> HttpPerformRequestAsync(string url, HttpMethod method, IDictionary<string, string> headers, IDictionary<string, string> data)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = method.ToString();
+            foreach (string key in headers.Keys)
+            {
+                if (key.Equals("Authorization", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    request.Headers.Add(HttpRequestHeader.Authorization, headers[key]);
+                }
+                else if (key.Equals("Date", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    request.Date = DateTime.Parse(headers[key], null, System.Globalization.DateTimeStyles.AssumeUniversal);
+                }
+                else
+                {
+                    request.Headers.Add(key, headers[key]);
+                }
+            }
 
+            try
+            {
+                if (method == HttpMethod.POST || method == HttpMethod.PUT)
+                {
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    using (StreamWriter sw = new StreamWriter(await request.GetRequestStreamAsync()))
+                    {
+                        await sw.WriteAsync(GetSerializedParams(data));
+                        sw.Flush();
+                    }
+                }
+
+                using (StreamReader sr = new StreamReader((await request.GetResponseAsync()).GetResponseStream()))
+                {
+                    return await sr.ReadToEndAsync();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private async Task<LatchResponse> HttpPerformRequestAsync(string url, HttpMethod method = HttpMethod.GET, IDictionary<string, string> data = null)
+        {
+            var authHeaders = AuthenticationHeaders(method.ToString(), url, null, data);
+            return new LatchResponse(await HttpPerformRequestAsync(apiHost + url, method, authHeaders, data));
+        }
+
+        /// <summary>
+        /// Pairs an account using its name
+        /// </summary>
+        /// <param name="id">Name of the account</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the account ID</returns>
+        /// <remarks>Only works in test backend</remarks>
+        public async Task<LatchResponse> PairWithIdAsync(string id)
+        {
+            return await HttpPerformRequestAsync(API_PAIR_WITH_ID_URL + "/" + UrlEncode(id));
+        }
+
+        /// <summary>
+        /// Pairs an account using a token
+        /// </summary>
+        /// <param name="token">Pairing token obtained by the user from the mobile application</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the AccountID</returns>
+        public async Task<LatchResponse> PairAsync(string token)
+        {
+            return await HttpPerformRequestAsync(API_PAIR_URL + "/" + UrlEncode(token));
+        }
+
+        /// <summary>
+        /// Requests the status of the specified account ID
+        /// </summary>
+        /// <param name="accountId">The account ID of the user</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the status of the account</returns>
+        public async Task<LatchResponse> StatusAsync(string accountId)
+        {
+            return await HttpPerformRequestAsync(API_CHECK_STATUS_URL + "/" + UrlEncode(accountId));
+        }
+
+        /// <summary>
+        /// Requests the status of the specified account ID and operation ID
+        /// </summary>
+        /// <param name="accountId">The account ID of the user</param>
+        /// <param name="operationId">The operation ID to be checked</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the status of the operation</returns>
+        public async Task<LatchResponse> OperationStatusAsync(string accountId, string operationId)
+        {
+            return await HttpPerformRequestAsync(API_CHECK_STATUS_URL + "/" + UrlEncode(accountId) + "/op/" + UrlEncode(operationId));
+        }
+
+        /// <summary>
+        /// Unpairs the specified account ID
+        /// </summary>
+        /// <param name="accountId">The account ID of the user</param>
+        /// <returns>If everything goes well, an empty response</returns>
+        public async Task<LatchResponse> UnpairAsync(string accountId)
+        {
+            return await HttpPerformRequestAsync(API_UNPAIR_URL + "/" + UrlEncode(accountId));
+        }
+#endif
 
         /// <summary>
         /// Pairs an account using its name
@@ -298,7 +405,7 @@ namespace LatchSDK
         {
             return HttpPerformRequest(API_HISTORY_URL + "/" + UrlEncode(accountId));
         }
-        
+
         /// <summary>
         /// Requests the history of the specified account ID between two instants
         /// </summary>
@@ -347,7 +454,7 @@ namespace LatchSDK
         {
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(parentOperationId));
         }
-        
+
         /// <summary>
         /// Creates a new operation with the specified parameters
         /// </summary>
@@ -395,9 +502,6 @@ namespace LatchSDK
                 data.Add("lock_on_request", lockOnRequest.ToString());
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(operationId), HttpMethod.POST, data);
         }
-
-
-
 
         /// <summary>
         /// Signs the data provided in order to prevent tampering
