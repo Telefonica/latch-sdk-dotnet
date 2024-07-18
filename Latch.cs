@@ -31,8 +31,8 @@ namespace LatchSDK
 {
     public class Latch
     {
-        private const string API_VERSION = "0.9";
-        private static string apiHost = "https://latch.telefonica.com";
+        private const string API_VERSION = "2.0";
+        private static string apiHost = "https://latch.tu.com";
         public static string API_HOST { get { return apiHost; } }
 
         public const string API_CHECK_STATUS_URL = "/api/" + API_VERSION + "/status";
