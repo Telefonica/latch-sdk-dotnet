@@ -77,7 +77,7 @@ namespace LatchSDK
         /// <summary>
         /// Sets the host of the Latch API backend
         /// </summary>
-        /// <param name="host">The host of the Latch API backend in standard URI format (e.g: "https://latch.telefonica.com")</param>
+        /// <param name="host">The host of the Latch API backend in standard URI format (e.g: "https://latch.tu.com")</param>
         public static void SetHost(string host)
         {
             if (string.IsNullOrEmpty(host))
