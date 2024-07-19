@@ -24,25 +24,26 @@
 	</ItemGroup>
 	<PropertyGroup>
 		<Title>Latch SDK</Title>
-		<Authors>Telefonica Digital</Authors>
+		<Authors>Telefónica Innovación Digital</Authors>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageLicenseUrl>http://www.gnu.org/licenses/lgpl-2.1.txt</PackageLicenseUrl>
+		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>latch security protection 2factor authentication two factor telefonica</PackageTags>
-		<PackageVersion>1.2.0</PackageVersion>
+		<PackageVersion>1.2.1</PackageVersion>
 		<Product>Latch SDK</Product>
 		<Description>Latch is a service that lets you add an extra level of security to your online services to help prevent any unauthorized use.</Description>
-		<PackageId>Latch_SDK</PackageId>
+		<PackageId>Latch.SDK</PackageId>
 		<Company>Telefonica Digital</Company>
 		<Copyright>Copyright © 2024</Copyright>
-		<Version>1.2.0</Version>
-		<AssemblyVersion>1.2.0</AssemblyVersion>
+		<Version>1.2.1</Version>
+		<AssemblyVersion>1.2.1</AssemblyVersion>
 		<IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
 		<RepositoryUrl>https://github.com/Telefonica/latch-sdk-dotnet</RepositoryUrl>
 		<PackageProjectUrl>https://latch.tu.com</PackageProjectUrl>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
 	</PropertyGroup>
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="\" />
+		<None Include="images\icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
-
 </Project>
