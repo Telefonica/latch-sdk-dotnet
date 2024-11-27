@@ -31,7 +31,7 @@ namespace LatchSDK
 {
     public abstract class LatchBase
     {
-        private const string API_VERSION = "2.0";
+        private const string API_VERSION = "3.0";
         private static string apiHost = "https://latch.tu.com";
         protected static string API_HOST { get { return apiHost; } }
 

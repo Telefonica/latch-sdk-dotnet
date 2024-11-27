@@ -40,6 +40,22 @@ namespace LatchSDK
         }
 
         /// <summary>
+        /// Pairs an account using its name
+        /// </summary>
+        /// <param name="id">Name of the account</param>
+        /// <param name="commonName">Name attached to this pairing. Showed in admin panels</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the account ID</returns>
+        /// <remarks>Only works in test backend</remarks>
+        public LatchResponse PairWithId(string id, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "commonName", commonName }
+            };
+            return HttpPerformRequest(API_PAIR_WITH_ID_URL + "/" + UrlEncode(id), HttpMethod.POST, data);
+        }
+
+        /// <summary>
         /// Pairs an account using a token
         /// </summary>
         /// <param name="token">Pairing token obtained by the user from the mobile application</param>
@@ -48,6 +64,22 @@ namespace LatchSDK
         {
             return HttpPerformRequest(API_PAIR_URL + "/" + UrlEncode(token));
         }
+
+        /// <summary>
+        /// Pairs an account using a token
+        /// </summary>
+        /// <param name="token">Pairing token obtained by the user from the mobile application</param>
+        /// <param name="commonName">Name attached to this pairing. Showed in admin panels</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the AccountID</returns>
+        public LatchResponse Pair(string token, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "commonName", commonName }
+            };
+            return HttpPerformRequest(API_PAIR_URL + "/" + UrlEncode(token), HttpMethod.POST, data);
+        }
+
 
         /// <summary>
         /// Requests the status of the specified account ID
@@ -232,6 +264,67 @@ namespace LatchSDK
             if (lockOnRequest.HasValue)
                 data.Add("lock_on_request", lockOnRequest.ToString());
             return HttpPerformRequest(API_OPERATION_URL + "/" + UrlEncode(operationId), HttpMethod.POST, data);
+        }
+
+        /// <summary>
+        /// Create a new TOTP for a given user
+        /// </summary>
+        /// <param name="userId">Identifier associated with the user (provider-dependent)</param>
+        /// <param name="commonName">Name associated with the user (provider-dependent)</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the TOTP ID and all of its properties</returns>
+        public LatchResponse CreateTOTP(string userId, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "userId", userId },
+                { "commonName", commonName }
+            };
+            return HttpPerformRequest(API_TOTP_URL, HttpMethod.POST, data);
+        }
+
+        /// <summary>
+        /// Delete a specific TOTP using its identifier totpId
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP to be deleted</param>
+        /// <returns>If everything goes well, an empty response</returns>
+        public LatchResponse DeleteTOTP(string totpId)
+        {
+            return HttpPerformRequest(API_TOTP_URL + "/" + UrlEncode(totpId));
+        }
+
+        /// <summary>
+        /// Returns the information of a specific TOTP based on its totpId
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP to be retrieved</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the TOTP properties</returns>
+        public LatchResponse GetTOTP(string totpId)
+        {
+            return HttpPerformRequest(API_TOTP_URL + "/" + UrlEncode(totpId));
+        }
+
+        /// <summary>
+        /// Validates a specific TOTP code provided by the user. The totpId identifies the TOTP, and code is the generated code that needs to be validated
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP that will be used to validate the algorithm against the provided code</param>
+        /// <param name="code">Code provided by the end-user, to be validated using the algorithm specified by the totpId</param>
+        /// <returns></returns>
+        public LatchResponse ValidateTOTP(string totpId, string code)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "code", code }
+            };
+            return HttpPerformRequest(API_TOTP_URL + "/" + UrlEncode(totpId) + "/validate", HttpMethod.POST, data);
+        }
+
+        public LatchResponse CreateQSecret(int length, string encoding)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "length", length.ToString() },
+                { "encoding", encoding },
+            };
+            return HttpPerformRequest(API_Q_SECRET_URL, HttpMethod.POST, data);
         }
     }
 }

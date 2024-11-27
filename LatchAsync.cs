@@ -43,6 +43,22 @@ namespace LatchSDK
         }
 
         /// <summary>
+        /// Pairs an account using its name
+        /// </summary>
+        /// <param name="id">Name of the account</param>
+        /// <param name="commonName">Name attached to this pairing. Showed in admin panels</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the account ID</returns>
+        /// <remarks>Only works in test backend</remarks>
+        public async Task<LatchResponse> PairWithIdAsync(string id, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "commonName", commonName }
+            };
+            return await HttpPerformRequestAsync(API_PAIR_WITH_ID_URL + "/" + UrlEncode(id), HttpMethod.POST, data);
+        }
+
+        /// <summary>
         /// Pairs an account using a token
         /// </summary>
         /// <param name="token">Pairing token obtained by the user from the mobile application</param>
@@ -50,6 +66,21 @@ namespace LatchSDK
         public async Task<LatchResponse> PairAsync(string token)
         {
             return await HttpPerformRequestAsync(API_PAIR_URL + "/" + UrlEncode(token));
+        }
+
+        /// <summary>
+        /// Pairs an account using a token
+        /// </summary>
+        /// <param name="token">Pairing token obtained by the user from the mobile application</param>
+        /// <param name="commonName">Name attached to this pairing. Showed in admin panels</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the AccountID</returns>
+        public LatchResponse Pair(string token, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "commonName", commonName }
+            };
+            return HttpPerformRequest(API_PAIR_URL + "/" + UrlEncode(token), HttpMethod.POST, data);
         }
 
         /// <summary>
@@ -235,6 +266,67 @@ namespace LatchSDK
             if (lockOnRequest.HasValue)
                 data.Add("lock_on_request", lockOnRequest.ToString());
             return await HttpPerformRequestAsync(API_OPERATION_URL + "/" + UrlEncode(operationId), HttpMethod.POST, data);
+        }
+
+        /// <summary>
+        /// Create a new TOTP for a given user
+        /// </summary>
+        /// <param name="userId">Identifier associated with the user (provider-dependent)</param>
+        /// <param name="commonName">Name associated with the user (provider-dependent)</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the TOTP ID and all of its properties</returns>
+        public async Task<LatchResponse> CreateTOTP(string userId, string commonName)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "userId", userId },
+                { "commonName", commonName }
+            };
+            return await HttpPerformRequestAsync(API_TOTP_URL, HttpMethod.POST, data);
+        }
+
+        /// <summary>
+        /// Delete a specific TOTP using its identifier totpId
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP to be deleted</param>
+        /// <returns>If everything goes well, an empty response</returns>
+        public async Task<LatchResponse> DeleteTOTP(string totpId)
+        {
+            return await HttpPerformRequestAsync(API_TOTP_URL + "/" + UrlEncode(totpId));
+        }
+
+        /// <summary>
+        /// Returns the information of a specific TOTP based on its totpId
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP to be retrieved</param>
+        /// <returns>If everything goes well, a <code>LatchResponse</code> object containing the TOTP properties</returns>
+        public async Task<LatchResponse> GetTOTP(string totpId)
+        {
+            return await HttpPerformRequestAsync(API_TOTP_URL + "/" + UrlEncode(totpId));
+        }
+
+        /// <summary>
+        /// Validates a specific TOTP code provided by the user. The totpId identifies the TOTP, and code is the generated code that needs to be validated
+        /// </summary>
+        /// <param name="totpId">Identifier of the TOTP that will be used to validate the algorithm against the provided code</param>
+        /// <param name="code">Code provided by the end-user, to be validated using the algorithm specified by the totpId</param>
+        /// <returns></returns>
+        public async Task<LatchResponse> ValidateTOTP(string totpId, string code)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "code", code }
+            };
+            return await HttpPerformRequestAsync(API_TOTP_URL + "/" + UrlEncode(totpId) + "/validate", HttpMethod.POST, data);
+        }
+
+        public async Task<LatchResponse> CreateQSecret(int length, string encoding)
+        {
+            var data = new Dictionary<string, string>()
+            {
+                { "length", length.ToString() },
+                { "encoding", encoding },
+            };
+            return await HttpPerformRequestAsync(API_Q_SECRET_URL, HttpMethod.POST, data);
         }
     }
 
