@@ -17,17 +17,26 @@
 
 
 ### USING THE SDK IN C#.
-* Create a Latch object with the "Application ID" and "Secret" previously obtained.
+* Create a Latch object to use sync operations, or LatchAsync object to async operations, with the "Application ID" and "Secret" previously obtained.
 ```
      Latch latch = new Latch(APP_ID, SECRET);
 ```
+```
+     LatchAsync latch = new LatchAsync(APP_ID, SECRET);
+```
 
-* Call to Latch Server. Pairing will return an **Account ID** that you should store for future API calls
+* Call to Latch Server with sync or async methods. Pairing will return an **Account ID** that you should store for future API calls
 ```
      LatchResponse pairResponse = latch.Pair(TOKEN);
      LatchResponse statusResponse = latch.Status(ACCOUNT_ID);
      LatchResponse opStatusResponse = latch.OperationStatus(ACCOUNT_ID, OPERATION_ID);
      LatchResponse unpairResponse = latch.Unpair(ACCOUNT_ID);
+```
+```
+     LatchResponse pairResponse = await latch.PairAsync(TOKEN);
+     LatchResponse statusResponse = await latch.StatusAsync(ACCOUNT_ID);
+     LatchResponse opStatusResponse = await latch.OperationStatusAsync(ACCOUNT_ID, OPERATION_ID);
+     LatchResponse unpairResponse = await latch.UnpairAsync(ACCOUNT_ID);
 ```
 
 

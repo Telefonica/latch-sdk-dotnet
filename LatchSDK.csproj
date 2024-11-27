@@ -14,7 +14,7 @@
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
 		<PackageReference Include="System.Text.Json">
-			<Version>6.0.9</Version>
+			<Version>6.0.11</Version>
 		</PackageReference>
 	</ItemGroup>
 
@@ -28,14 +28,14 @@
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
 		<PackageTags>latch security protection 2factor authentication two factor telefonica</PackageTags>
-		<PackageVersion>1.2.1</PackageVersion>
+		<PackageVersion>2.0.0</PackageVersion>
 		<Product>Latch SDK</Product>
 		<Description>Latch is a service that lets you add an extra level of security to your online services to help prevent any unauthorized use.</Description>
 		<PackageId>Latch.SDK</PackageId>
 		<Company>Telefonica Digital</Company>
 		<Copyright>Copyright © 2024</Copyright>
-		<Version>1.2.1</Version>
-		<AssemblyVersion>1.2.1</AssemblyVersion>
+		<Version>2.0.0</Version>
+		<AssemblyVersion>2.0.0</AssemblyVersion>
 		<IncludeSourceRevisionInInformationalVersion>False</IncludeSourceRevisionInInformationalVersion>
 		<RepositoryUrl>https://github.com/Telefonica/latch-sdk-dotnet</RepositoryUrl>
 		<PackageProjectUrl>https://latch.tu.com</PackageProjectUrl>
